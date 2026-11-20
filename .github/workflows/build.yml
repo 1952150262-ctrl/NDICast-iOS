@@ -17,9 +17,14 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
 
-      - name: Check NDI SDK
+      - name: Prepare NDI library
         run: |
-          ls -l vendor/NDI || (echo "缺少 vendor/NDI（把 NDI SDK 的 include + libndi_ios.a 放进去）" && exit 1)
+          ls -l vendor/NDI
+          if [ -f vendor/NDI/libndi_ios.a.gz ] && [ ! -f vendor/NDI/libndi_ios.a ]; then
+            gunzip -c vendor/NDI/libndi_ios.a.gz > vendor/NDI/libndi_ios.a
+          fi
+          ls -lh vendor/NDI/libndi_ios.a
+          ls vendor/NDI/include | head -5
 
       - name: Generate project
         run: xcodegen generate

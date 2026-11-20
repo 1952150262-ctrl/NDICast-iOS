@@ -5,3 +5,5 @@ DerivedData/
 .DS_Store
 NDICast-unsigned.ipa
 Payload/
+# NDI 原始库不进仓库，只提交 .gz（CI 里解压）
+vendor/NDI/libndi_ios.a
