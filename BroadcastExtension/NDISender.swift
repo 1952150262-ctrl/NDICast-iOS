@@ -7,37 +7,41 @@ final class NDISender {
     private var pool: CVPixelBufferPool?
     private let side: Int
     private var lastBuffers: [CVPixelBuffer] = []
+    private var nameBuffer: UnsafeMutablePointer<CChar>?
 
     init(side: Int) {
         self.side = side
+
+        // NDI 需要 C 字符串，且创建期间要保持有效 → strdup 后自己持有
+        nameBuffer = strdup("iPhone NDI")
+
         var settings = NDIlib_send_create_t()
-        settings.p_ndi_name = "iPhone NDI"
+        settings.p_ndi_name = UnsafePointer<CChar>(nameBuffer)
+        settings.p_groups = nil
         settings.clock_video = true
+        settings.clock_audio = false
         instance = NDIlib_send_create(&settings)
 
         let attrs: [String: Any] = [
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_422YpCbCr8,
             kCVPixelBufferWidthKey as String: side,
             kCVPixelBufferHeightKey as String: side,
-            kCVPixelBufferIOSurfacePropertiesKey as String: [:],
-            kCVPixelBufferCGBitmapContextCompatibilityKey as String: false
+            kCVPixelBufferIOSurfacePropertiesKey as String: [:]
         ]
         var p: CVPixelBufferPool?
         CVPixelBufferPoolCreate(kCFAllocatorDefault, nil, attrs as CFDictionary, &p)
         pool = p
     }
 
-    /// 取一块 UYVY 输出缓冲
     func dequeueBuffer() -> CVPixelBuffer? {
         guard let pool = pool else { return nil }
         var pb: CVPixelBuffer?
-        guard CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pool, &pb) == kCVReturnSuccess else {
-            return nil
-        }
-        // NDI 异步发送会占用上一两帧，保留引用避免被回收
-        if let b = pb { lastBuffers.append(b) }
-        if lastBuffers.count > 3 { lastBuffers.removeFirst() }
-        return pb
+        guard CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, pool, &pb) == kCVReturnSuccess,
+              let buffer = pb else { return nil }
+        // NDI 异步发送会占用最近几帧，保留引用避免被回收
+        lastBuffers.append(buffer)
+        if lastBuffers.count > 4 { lastBuffers.removeFirst() }
+        return buffer
     }
 
     func send(_ pb: CVPixelBuffer) {
@@ -65,5 +69,6 @@ final class NDISender {
 
     deinit {
         if let i = instance { NDIlib_send_destroy(i) }
+        if let n = nameBuffer { free(n) }
     }
 }
