@@ -1,0 +1,46 @@
+name: NDICast
+options:
+  bundleIdPrefix: com.local.ndicast
+  deploymentTarget:
+    iOS: "15.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    ENABLE_BITCODE: NO
+    IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+
+targets:
+  NDICast:
+    type: application
+    platform: iOS
+    sources:
+      - path: NDICast
+    dependencies:
+      - target: BroadcastExtension
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.ndicast
+        INFOPLIST_FILE: NDICast/Info.plist
+        CODE_SIGN_ENTITLEMENTS: NDICast/NDICast.entitlements
+        OTHER_LDFLAGS: "-ObjC -lc++"
+        HEADER_SEARCH_PATHS: "$(SRCROOT)/vendor/NDI/include"
+        SWIFT_OBJC_BRIDGING_HEADER: NDICast/Bridging-Header.h
+        LIBRARY_SEARCH_PATHS: "$(SRCROOT)/vendor/NDI"
+
+  BroadcastExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: BroadcastExtension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.ndicast.broadcast
+        INFOPLIST_FILE: BroadcastExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: BroadcastExtension/BroadcastExtension.entitlements
+        OTHER_LDFLAGS: "-ObjC -lc++"
+        HEADER_SEARCH_PATHS: "$(SRCROOT)/vendor/NDI/include"
+        SWIFT_OBJC_BRIDGING_HEADER: BroadcastExtension/Bridging-Header.h
+        LIBRARY_SEARCH_PATHS: "$(SRCROOT)/vendor/NDI"
