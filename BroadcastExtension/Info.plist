@@ -29,5 +29,14 @@
 		<key>RPBroadcastProcessMode</key>
 		<string>RPBroadcastProcessModeSampleBuffer</string>
 	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>NDI 需要访问本地网络来发布视频源给电脑接收</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_ndi._tcp</string>
+		<string>_ndi._udp</string>
+		<string>_ndi._tcp.</string>
+		<string>_ndi._udp.</string>
+	</array>
 </dict>
 </plist>

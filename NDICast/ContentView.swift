@@ -40,6 +40,11 @@ struct ContentView: View {
             }
             .padding()
             .navigationBarTitle("NDI Cast", displayMode: .inline)
+            .onAppear {
+                // 触发本地网络权限 + 预热 NDI 运行时
+                let n = NDIPermission.warmup()
+                print("NDI warmup, discovered sources: \(n)")
+            }
         }
     }
 }

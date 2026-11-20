@@ -20,12 +20,29 @@ targets:
     dependencies:
       - target: BroadcastExtension
         embed: true
+      - framework: vendor/NDI/libndi_ios.a
+        embed: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.local.ndicast
         INFOPLIST_FILE: NDICast/Info.plist
         CODE_SIGN_ENTITLEMENTS: NDICast/NDICast.entitlements
         HEADER_SEARCH_PATHS: "$(SRCROOT)/vendor/NDI/include"
+        SWIFT_OBJC_BRIDGING_HEADER: NDICast/Bridging-Header.h
+        LIBRARY_SEARCH_PATHS: "$(SRCROOT)/vendor/NDI"
+        OTHER_LDFLAGS: >-
+          -ObjC -lc++
+          -framework Accelerate
+          -framework VideoToolbox
+          -framework CoreVideo
+          -framework CoreMedia
+          -framework CoreAudio
+          -framework AudioToolbox
+          -framework CoreServices
+          -framework AVFoundation
+          -framework CoreImage
+          -framework Security
+          -framework CoreFoundation
 
   BroadcastExtension:
     type: app-extension

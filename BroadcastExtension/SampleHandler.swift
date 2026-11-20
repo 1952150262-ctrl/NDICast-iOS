@@ -19,6 +19,9 @@ final class SampleHandler: RPBroadcastSampleHandler {
         side = defaults?.integer(forKey: "cropSize") ?? 0
         if side != 320 && side != 416 { side = 416 }
 
+        // NDI 静态库必须先 initialize（否则 send_create 返回空 → 电脑看不到源）
+        NDIlib_initialize()
+
         sender = NDISender(side: side)
         context = CIContext(options: [.cacheIntermediates: false])
     }
