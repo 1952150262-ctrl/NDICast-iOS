@@ -8,6 +8,7 @@ final class NDISender {
     private let side: Int
     private var lastBuffers: [CVPixelBuffer] = []
     private var nameBuffer: UnsafeMutablePointer<CChar>?
+    var isReady: Bool { instance != nil }
 
     init(side: Int) {
         self.side = side
