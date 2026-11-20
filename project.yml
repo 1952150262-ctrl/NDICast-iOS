@@ -25,22 +25,34 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.local.ndicast
         INFOPLIST_FILE: NDICast/Info.plist
         CODE_SIGN_ENTITLEMENTS: NDICast/NDICast.entitlements
-        OTHER_LDFLAGS: "-ObjC -lc++"
         HEADER_SEARCH_PATHS: "$(SRCROOT)/vendor/NDI/include"
-        SWIFT_OBJC_BRIDGING_HEADER: NDICast/Bridging-Header.h
-        LIBRARY_SEARCH_PATHS: "$(SRCROOT)/vendor/NDI"
 
   BroadcastExtension:
     type: app-extension
     platform: iOS
     sources:
       - path: BroadcastExtension
+    dependencies:
+      - framework: vendor/NDI/libndi_ios.a
+        embed: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.local.ndicast.broadcast
         INFOPLIST_FILE: BroadcastExtension/Info.plist
         CODE_SIGN_ENTITLEMENTS: BroadcastExtension/BroadcastExtension.entitlements
-        OTHER_LDFLAGS: "-ObjC -lc++"
         HEADER_SEARCH_PATHS: "$(SRCROOT)/vendor/NDI/include"
         SWIFT_OBJC_BRIDGING_HEADER: BroadcastExtension/Bridging-Header.h
         LIBRARY_SEARCH_PATHS: "$(SRCROOT)/vendor/NDI"
+        OTHER_LDFLAGS: >-
+          -ObjC -lc++
+          -framework Accelerate
+          -framework VideoToolbox
+          -framework CoreVideo
+          -framework CoreMedia
+          -framework CoreAudio
+          -framework AudioToolbox
+          -framework CoreServices
+          -framework AVFoundation
+          -framework CoreImage
+          -framework Security
+          -framework CoreFoundation
