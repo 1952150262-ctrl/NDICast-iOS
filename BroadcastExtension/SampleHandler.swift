@@ -58,7 +58,7 @@ final class SampleHandler: RPBroadcastSampleHandler {
 
         // 系统附件拿不到时（ReplayKit 在部分场景不挂这个键）退回固定 90°，
         // 因为 iPhone 面板是竖的、横屏游戏的像素一定是转着的。
-        var orientation: CGImagePropertyOrientation = .right
+        var orientation: CGImagePropertyOrientation = .left
         if let num = CMGetAttachment(sampleBuffer, key: orientationKey, attachmentModeOut: nil) as? NSNumber,
            let o = CGImagePropertyOrientation(rawValue: num.uint32Value) {
             orientation = o
