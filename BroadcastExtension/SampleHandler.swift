@@ -80,7 +80,7 @@ final class SampleHandler: RPBroadcastSampleHandler {
             return
         }
         let bounds = CGRect(x: 0, y: 0, width: side, height: side)
-        context.render(out, to: pb, bounds: bounds, colorSpace: nil)
+        context.render(out, to: pb, bounds: bounds, colorSpace: CGColorSpaceCreateDeviceRGB())
         sender.send(pb)
     }
 }
