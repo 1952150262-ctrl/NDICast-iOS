@@ -21,18 +21,16 @@ NDICast/
 └── .github/workflows/build.yml     GitHub Actions 自动打包
 ```
 
-## 一、准备 NDI SDK（一次性）
+## 一、NDI SDK（已内置，无需再下载）
 
-1. 打开 <https://ndi.video/for-developers/ndi-sdk/>，下载 **NDI SDK for iOS**（免费，需接受许可）；
-2. 解压后把下面两样放进工程的 `vendor/NDI/`：
+已从 `Install_NDI_SDK_v6_Apple.pkg` 中提取并内置：
 
 ```
-vendor/NDI/
-├── include/                ← Processing.NDI.Lib.h 等所有头文件
-└── libndi_ios.a            ← 静态库（arm64）
+vendor/NDI/include/           NDI SDK v6 全部头文件
+vendor/NDI/libndi_ios.a.gz    iOS arm64 静态库（142MB → gzip 33.8MB）
 ```
 
-最终应当是 `vendor/NDI/include/Processing.NDI.Lib.h` 存在。
+CI 里会自动 `gunzip` 还原成 `libndi_ios.a` 再编译，所以仓库不需要塞 142MB 的原始文件。
 
 ## 二、打包（不需要 Mac）
 
